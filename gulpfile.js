@@ -14,7 +14,17 @@ function compileSass() {
 // Tarefa para comprimir imagens
 function compressImages() {
     return gulp.src('images/**/*')
-        .pipe(imagemin())
+        .pipe(imagemin([
+            imagemin.gifsicle({ interlaced: true }),
+            imagemin.mozjpeg({ quality: 75, progressive: true }),
+            imagemin.optipng({ optimizationLevel: 5 }),
+            imagemin.svgo({
+                plugins: [
+                    { name: 'removeViewBox', active: true },
+                    { name: 'cleanupIDs', active: false }
+                ]
+            })
+        ]))
         .pipe(gulp.dest('dist/images'));
 }
 
